@@ -99,50 +99,58 @@ end
 
 local function showPreview(script)
     clearPreview()
-    PreviewTab:SetTitle(script.name or "Script")
 
-    local image = script.image
-    if image and image ~= "" then
-        local img = PreviewTab:Image({
-            Image = image,
-            AspectRatio = "16:9",
-            Radius = 12,
+    local ok, err = pcall(function()
+        local image = script.image
+        if image and image ~= "" then
+            local img = PreviewTab:Image({
+                Image = image,
+                AspectRatio = "16:9",
+                Radius = 12,
+            })
+            table.insert(previewElements, img)
+            PreviewTab:Space({ Columns = 1 })
+        end
+
+        local titleP = PreviewTab:Paragraph({
+            Title = script.name or "Untitled",
+            Desc = (script.category or "Misc") .. (script.addedAt and ("  \226\128\162  added " .. tostring(script.addedAt):sub(1, 10)) or ""),
+            Image = "solar:bookmark-circle-bold",
+            ImageSize = 24,
         })
-        table.insert(previewElements, img)
+        table.insert(previewElements, titleP)
         PreviewTab:Space({ Columns = 1 })
+
+        local desc = PreviewTab:Paragraph({
+            Title = "About",
+            Desc = (script.description or "No description provided."),
+        })
+        table.insert(previewElements, desc)
+        PreviewTab:Space({ Columns = 1 })
+
+        local execBtn = PreviewTab:Button({
+            Title = "Execute " .. (script.name or "Script"),
+            Icon = "play",
+            Color = Color3.fromHex("#10C550"),
+            Justify = "Center",
+            Callback = function()
+                local ok, err = runScript(script.name, script.code)
+                notify(ok and "Executed" or "Failed", ok and script.name or tostring(err), ok)
+            end,
+        })
+        table.insert(previewElements, execBtn)
+
+        PreviewTab:Space({ Columns = 1 })
+    end)
+
+    if not ok then
+        log("Preview build error: " .. tostring(err))
     end
 
-    local titleP = PreviewTab:Paragraph({
-        Title = script.name or "Untitled",
-        Desc = (script.category or "Misc") .. (script.addedAt and ("  •  added " .. tostring(script.addedAt):sub(1, 10)) or ""),
-        Image = "solar:bookmark-circle-bold",
-        ImageSize = 24,
-    })
-    table.insert(previewElements, titleP)
-    PreviewTab:Space({ Columns = 1 })
-
-    local desc = PreviewTab:Paragraph({
-        Title = "About",
-        Desc = (script.description or "No description provided."),
-    })
-    table.insert(previewElements, desc)
-    PreviewTab:Space({ Columns = 1 })
-
-    local execBtn = PreviewTab:Button({
-        Title = "Execute " .. (script.name or "Script"),
-        Icon = "play",
-        Color = Color3.fromHex("#10C550"),
-        Justify = "Center",
-        Callback = function()
-            local ok, err = runScript(script.name, script.code)
-            notify(ok and "Executed" or "Failed", ok and script.name or tostring(err), ok)
-        end,
-    })
-    table.insert(previewElements, execBtn)
-
-    PreviewTab:Space({ Columns = 1 })
-
-    PreviewTab:Select()
+    local sok, serr = pcall(function() PreviewTab:Select() end)
+    if not sok then
+        log("Preview select error: " .. tostring(serr))
+    end
 end
 
 local function buildWindow()
