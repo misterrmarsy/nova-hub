@@ -10,7 +10,7 @@ getgenv().HubAutoLoad = getgenv().HubAutoLoad or false
 local GIST_RAW_URL = "https://gist.githubusercontent.com/misterrmarsy/8112f01f9361a81f0aac480380c5f059/raw/script_database.json"
 local WINDUI_URL = "https://raw.githubusercontent.com/Footagesus/WindUI/main/dist/main.lua"
 local HUB_NAME = "Nova Hub"
-local HUB_VERSION = "3.1.0"
+local HUB_VERSION = "3.2.0"
 -- ==========================================
 
 local HttpService = game:GetService("HttpService")
@@ -19,6 +19,9 @@ local Database = { scripts = {} }
 local function log(msg)
     pcall(function() print("[NovaHub] " .. tostring(msg)) end)
 end
+
+print("=== Nova Hub v" .. HUB_VERSION .. " booting ===")
+print("[NovaHub] checking hardware: " .. tostring(game:GetService("Players").LocalPlayer or "none"))
 
 -- ============ WINDUI LOAD (GitHub raw, robust) ============
 local WindUI
