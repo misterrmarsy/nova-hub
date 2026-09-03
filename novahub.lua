@@ -21,7 +21,9 @@ local function log(msg)
 end
 
 print("=== Nova Hub v" .. HUB_VERSION .. " booting ===")
-print("[NovaHub] checking hardware: " .. tostring(game:GetService("Players").LocalPlayer or "none"))
+pcall(function()
+    print("[NovaHub] player: " .. tostring(game:GetService("Players").LocalPlayer or "none"))
+end)
 
 -- ============ WINDUI LOAD (GitHub raw, robust) ============
 local WindUI
