@@ -148,7 +148,7 @@ end
 local function buildWindow()
     Window = WindUI:CreateWindow({
         Title = HUB_NAME .. " v" .. HUB_VERSION,
-        Author = "by Void",
+        Author = "by Scratch Team",
         Folder = "NovaHub",
         Icon = "solar:folder-2-bold-duotone",
         NewElements = true,
